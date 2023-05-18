@@ -61,12 +61,10 @@ namespace Pathfinding {
 		std::vector<bool> visited(graphNodes.size(), false);
 
 		std::vector<int> distances(graphNodes.size(), INT_MAX);
-		std::vector<int> heuristicDistances(graphNodes.size(), INT_MAX);
 
 		std::vector<Node*> path;
 
 		distances[startNode->GetID()] = 0;
-		heuristicDistances[startNode->GetID()] = heuristicFunction(startNode, endNode);
 
 		std::queue<Node*> queue;
 		queue.push(startNode);
@@ -78,8 +76,8 @@ namespace Pathfinding {
 			Node* node = queue.front();
 			queue.pop();
 
-			minDistance = INT_MAX;
-			minNodeIndex = 0;
+			int minDistance = INT_MAX;
+			int minNodeIndex = 0;
 
 			auto neighbours = node->GetAdjacentNodes();
 
@@ -90,7 +88,7 @@ namespace Pathfinding {
 				if (visited[neighbourNode->GetID()])
 					continue;
 
-				if (distances[node->GetID()] + weight < distances[neighbourNode->GetID()]) {
+				if (distances[node->GetID()] + weight + heuristicFunction(neighbourNode, endNode) < distances[neighbourNode->GetID()]) {
 					distances[neighbourNode->GetID()] = distances[node->GetID()] + weight;
 
 					if (minDistance > distances[neighbourNode->GetID()]) {
@@ -99,13 +97,16 @@ namespace Pathfinding {
 					}
 				}
 			}
-
+			
 			visited[node->GetID()] = true;
 
 			if (minDistance != INT_MAX) {
 				queue.push(graphNodes[minNodeIndex]);
+				path.push_back(node);
 			}
 		}
+
+		path.push_back(endNode);
 
 		return path;
 	}

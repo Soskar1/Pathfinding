@@ -58,12 +58,12 @@ namespace Graphs {
 		return m_Nodes;
 	}
 
-	int xCoordinateComparison(Node* first, Node* second)
+	int XCoordinateComparison(Node* first, Node* second)
 	{
 		return abs(first->GetCoordinates().first - second->GetCoordinates().first);
 	}
 
-	int yCoordinateComparison(Node* first, Node* second)
+	int YCoordinateComparison(Node* first, Node* second)
 	{
 		return abs(first->GetCoordinates().second - second->GetCoordinates().second);
 	}

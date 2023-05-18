@@ -29,8 +29,8 @@ namespace Graphs {
 		std::vector<Node*> GetNodes() const;
 	};
 
-	int xCoordinateComparison(Node* first, Node* second);
-	int yCoordinateComparison(Node* first, Node* second);
+	int XCoordinateComparison(Node* first, Node* second);
+	int YCoordinateComparison(Node* first, Node* second);
 	int EuclideanDistance(Node* first, Node* second);
 }
 #endif
