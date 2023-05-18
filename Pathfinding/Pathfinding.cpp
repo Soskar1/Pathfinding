@@ -88,8 +88,10 @@ namespace Pathfinding {
 				if (visited[neighbourNode->GetID()])
 					continue;
 
-				if (distances[node->GetID()] + weight + heuristicFunction(neighbourNode, endNode) < distances[neighbourNode->GetID()]) {
-					distances[neighbourNode->GetID()] = distances[node->GetID()] + weight;
+				int heuristicValue = heuristicFunction(neighbourNode, endNode);
+
+				if (distances[node->GetID()] + weight + heuristicValue < distances[neighbourNode->GetID()]) {
+					distances[neighbourNode->GetID()] = distances[node->GetID()] + weight + heuristicValue;
 
 					if (minDistance > distances[neighbourNode->GetID()]) {
 						minDistance = distances[neighbourNode->GetID()];

@@ -31,7 +31,7 @@ int main()
 	}
 	std::cout << std::endl;
 
-	std::vector<Node*> path = AStar(graph, nodes[0], nodes[2], YCoordinateComparison);
+	std::vector<Node*> path = AStar(graph, nodes[0], nodes[2], EuclideanDistance);
 
 	for (int i = 0; i < path.size() - 1; ++i) {
 		std::cout << path[i]->GetID() << " -> ";

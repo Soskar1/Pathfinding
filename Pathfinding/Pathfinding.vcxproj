@@ -127,6 +127,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Example2.cpp" />
     <ClCompile Include="Graph.cpp" />
     <ClCompile Include="Example.cpp" />
     <ClCompile Include="Pathfinding.cpp" />
