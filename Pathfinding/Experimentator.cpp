@@ -11,7 +11,7 @@ double GetAverageExecutionTime(const std::function<void()>& function, const std:
 		auto begin = high_resolution_clock().now();
 		function();
 		auto end = high_resolution_clock().now();
-		totalExecutionTime += duration_cast<nanoseconds>(end - begin).count();
+		totalExecutionTime += duration_cast<microseconds>(end - begin).count();
 	}
 
 	return totalExecutionTime / EXPERIMENT_COUNT;
