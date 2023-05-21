@@ -106,6 +106,10 @@ namespace Pathfinding {
 				queue.push(graphNodes[minNodeIndex]);
 				path.push_back(node);
 			}
+
+			if (node == endNode) {
+				break;
+			}
 		}
 
 		path.push_back(endNode);

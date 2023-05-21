@@ -7,7 +7,7 @@
 #include "Pathfinding.h"
 #include "Experimentator.h"
 
-#define GRAPH_SIZE 30
+#define GRAPH_SIZE 10000
 #define MAX_COST 100
 #define MAX_NODE_DISTANCE 1000
 
