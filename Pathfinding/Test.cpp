@@ -7,9 +7,9 @@
 #include "Pathfinding.h"
 #include "Experimentator.h"
 
-#define GRAPH_SIZE 1000
+#define GRAPH_SIZE 10000
 #define MAX_COST 100
-#define MAX_NODE_DISTANCE 1000
+#define MAX_NODE_DISTANCE 200
 
 std::vector<std::pair<int, int>> GenerateCoordinates() {
 	std::vector<std::pair<int, int>> coordinates;
@@ -86,7 +86,7 @@ int main() {
 			startNode = graph.GetNodes()[rand() % GRAPH_SIZE];
 		});
 
-	std::cout << "Dijkstra average time: " << time << " microseconds\n";
+	std::cout << "Dijkstra average time: " << time << " milliseconds\n";
 
 	time = GetAverageExecutionTime(
 		[&graph, &startNode, &endNode]() {
@@ -102,7 +102,7 @@ int main() {
 		}
 	);
 
-	std::cout << "A*|XCoordinateComparison average time: " << time << " microseconds\n";
+	std::cout << "A*|XCoordinateComparison average time: " << time << " milliseconds\n";
 
 	time = GetAverageExecutionTime(
 		[&graph, &startNode, &endNode]() {
@@ -118,7 +118,7 @@ int main() {
 		}
 		);
 
-	std::cout << "A*|YCoordinateComparison average time: " << time << " microseconds\n";
+	std::cout << "A*|YCoordinateComparison average time: " << time << " milliseconds\n";
 
 	time = GetAverageExecutionTime(
 		[&graph, &startNode, &endNode]() {
@@ -134,7 +134,7 @@ int main() {
 		}
 		);
 
-	std::cout << "A*|EuclideanDistance average time: " << time << " microseconds\n";
+	std::cout << "A*|EuclideanDistance average time: " << time << " milliseconds\n";
 
 	return 0;
 }
