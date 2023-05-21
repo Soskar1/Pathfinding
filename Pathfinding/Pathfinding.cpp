@@ -1,6 +1,7 @@
 #include "Pathfinding.h"
 
 #include <queue>
+#include <map>
 
 namespace Pathfinding {
 	std::vector<int> Dijkstra(const Graphs::Graph& graph, Graphs::Node* startNode) {
@@ -54,66 +55,74 @@ namespace Pathfinding {
 		return distances;
 	}
 
-	std::vector<Graphs::Node*> AStar(const Graphs::Graph& graph, Graphs::Node* startNode, Graphs::Node* endNode, const std::function<int(Graphs::Node*, Graphs::Node*)>& heuristicFunction) {
+	std::list<Graphs::Node*> ConstructPath(std::map<Graphs::Node*, Graphs::Node*>& cameFrom, Graphs::Node* endNode) {
+		using namespace Graphs;
+
+		std::list<Node*> path;
+
+		Node* tmp = endNode;
+		path.push_front(endNode);
+		while (cameFrom.find(tmp) != cameFrom.end()) {
+			tmp = cameFrom[tmp];
+			path.push_front(tmp);
+		}
+
+		return path;
+	}
+
+	std::list<Graphs::Node*> AStar(const Graphs::Graph& graph, Graphs::Node* startNode, Graphs::Node* endNode, const std::function<int(Graphs::Node*, Graphs::Node*)>& heuristicFunction) {
 		using namespace Graphs;
 
 		std::vector<Node*> graphNodes = graph.GetNodes();
 		std::vector<bool> visited(graphNodes.size(), false);
-
 		std::vector<int> distances(graphNodes.size(), INT_MAX);
+		std::map<Node*, Node*> cameFrom;
 
-		std::vector<Node*> path;
+		struct NodeCompare {
+			bool operator()(const std::pair<Node*, int>& node1, const std::pair<Node*, int>& node2) {
+				return node1.second > node2.second;
+			}
+		};
+
+		std::priority_queue<std::pair<Node*, int>, std::vector<std::pair<Node*, int>>, NodeCompare> queue;
 
 		distances[startNode->GetID()] = 0;
 
-		std::queue<Node*> queue;
-		queue.push(startNode);
-
-		int minDistance = INT_MAX;
-		int minNodeIndex = 0;
+		int heuristicValue = heuristicFunction(startNode, endNode);
+		queue.push(std::make_pair(startNode, heuristicValue));
 
 		while (!queue.empty()) {
-			Node* node = queue.front();
+			auto node = queue.top();
 			queue.pop();
 
-			int minDistance = INT_MAX;
-			int minNodeIndex = 0;
+			if (node.first == endNode) {
+				break;
+			}
 
-			auto neighbours = node->GetAdjacentNodes();
+			auto neighbours = node.first->GetAdjacentNodes();
 
-			for (int i = 0; i < neighbours.size(); ++i) {
-				Node* neighbourNode = neighbours[i].first;
-				int weight = neighbours[i].second;
+			Node* nextNode;
+			for (auto neighbour : neighbours) {
+				Node* neighbourNode = neighbour.first;
+				int weight = neighbour.second;
 
 				if (visited[neighbourNode->GetID()])
 					continue;
 
-				int heuristicValue = heuristicFunction(neighbourNode, endNode);
+				heuristicValue = heuristicFunction(neighbourNode, endNode);
+				int totalCost = distances[node.first->GetID()] + weight + heuristicValue;
 
-				if (distances[node->GetID()] + weight + heuristicValue < distances[neighbourNode->GetID()]) {
-					distances[neighbourNode->GetID()] = distances[node->GetID()] + weight + heuristicValue;
+				if (totalCost < distances[neighbourNode->GetID()]) {
+					distances[neighbourNode->GetID()] = totalCost;
 
-					if (minDistance > distances[neighbourNode->GetID()]) {
-						minDistance = distances[neighbourNode->GetID()];
-						minNodeIndex = neighbourNode->GetID();
-					}
+					cameFrom[neighbourNode] = node.first;
+					queue.push(std::make_pair(neighbourNode, totalCost));
 				}
 			}
-			
-			visited[node->GetID()] = true;
 
-			if (minDistance != INT_MAX) {
-				queue.push(graphNodes[minNodeIndex]);
-				path.push_back(node);
-			}
-
-			if (node == endNode) {
-				break;
-			}
+			visited[node.first->GetID()] = true;
 		}
 
-		path.push_back(endNode);
-
-		return path;
+		return ConstructPath(cameFrom, endNode);
 	}
 }

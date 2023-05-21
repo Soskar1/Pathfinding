@@ -7,7 +7,7 @@
 #include "Pathfinding.h"
 #include "Experimentator.h"
 
-#define GRAPH_SIZE 10000
+#define GRAPH_SIZE 1000
 #define MAX_COST 100
 #define MAX_NODE_DISTANCE 1000
 
@@ -30,7 +30,7 @@ std::vector<std::vector<int>> GenerateAdjacencyMatrix(const std::vector<std::pai
 		
 		do {
 			randomNodeIndex = rand() % GRAPH_SIZE;
-		} while (randomNodeIndex == i);
+		} while (randomNodeIndex == i || adjacencyMatrix[i][randomNodeIndex] != 0);
 
 		int randomCost = 1 + rand() % MAX_COST;
 

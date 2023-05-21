@@ -22,12 +22,11 @@ int main()
 		{0, 5, 8, 0} }, coordinates);
 
 	std::vector<Node*> nodes = graph.GetNodes();
-	std::vector<Node*> path = AStar(graph, nodes[0], nodes[3], XCoordinateComparison);
+	std::list<Node*> path = AStar(graph, nodes[0], nodes[3], XCoordinateComparison);
 
-	for (int i = 0; i < path.size() - 1; ++i) {
-		std::cout << path[i]->GetID() << " -> ";
+	for (auto node : path) {
+		std::cout << node->GetID() << " ";
 	}
-	std::cout << path.back()->GetID() << std::endl;
 
 	return 0;
 }

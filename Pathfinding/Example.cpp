@@ -31,12 +31,11 @@ int main()
 	}
 	std::cout << std::endl;
 
-	std::vector<Node*> path = AStar(graph, nodes[0], nodes[2], EuclideanDistance);
+	std::list<Node*> path = AStar(graph, nodes[0], nodes[2], XCoordinateComparison);
 
-	for (int i = 0; i < path.size() - 1; ++i) {
-		std::cout << path[i]->GetID() << " -> ";
+	for (auto node : path) {
+		std::cout << node->GetID() << " ";
 	}
-	std::cout << path.back()->GetID() << std::endl;
 
 	return 0;
 }
