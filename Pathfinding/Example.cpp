@@ -17,11 +17,11 @@ int main()
 	coordinates.push_back(std::make_pair(10, 0));
 
 	Graph graph({
-		{0, 6, 0, 3, 0},
+		{0, 6, 0, 1, 0},
 		{6, 0, 5, 2, 2},
 		{0, 5, 0, 0, 5},
-		{3, 2, 0, 0, 3},
-		{0, 2, 5, 3, 0} }, coordinates);
+		{1, 2, 0, 0, 1},
+		{0, 2, 5, 1, 0} }, coordinates);
 
 	std::vector<Node*> nodes = graph.GetNodes();
 	std::vector<int> distances = Dijkstra(graph, nodes[0]);

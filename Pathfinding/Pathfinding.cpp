@@ -4,6 +4,12 @@
 #include <map>
 
 namespace Pathfinding {
+	struct NodeCompare {
+		bool operator()(const std::pair<Graphs::Node*, int>& node1, const std::pair<Graphs::Node*, int>& node2) {
+			return node1.second > node2.second;
+		}
+	};
+
 	std::vector<int> Dijkstra(const Graphs::Graph& graph, Graphs::Node* startNode) {
 		using namespace Graphs;
 
@@ -13,20 +19,14 @@ namespace Pathfinding {
 
 		distances[startNode->GetID()] = 0;
 
-		std::queue<Node*> queue;
-		queue.push(startNode);
-
-		int minDistance = INT_MAX;
-		int minNodeIndex = 0;
+		std::priority_queue<std::pair<Node*, int>, std::vector<std::pair<Node*, int>>, NodeCompare> queue;
+		queue.push(std::make_pair(startNode, 0));
 
 		while (!queue.empty()) {
-			Node* node = queue.front();
+			auto node = queue.top();
 			queue.pop();
 
-			minDistance = INT_MAX;
-			minNodeIndex = 0;
-
-			auto neighbours = node->GetAdjacentNodes();
+			auto neighbours = node.first->GetAdjacentNodes();
 
 			for (int i = 0; i < neighbours.size(); ++i) {
 				Node* neighbourNode = neighbours[i].first;
@@ -35,21 +35,16 @@ namespace Pathfinding {
 				if (visited[neighbourNode->GetID()])
 					continue;
 
-				if (distances[node->GetID()] + weight < distances[neighbourNode->GetID()]) {
-					distances[neighbourNode->GetID()] = distances[node->GetID()] + weight;
+				int totalCost = distances[node.first->GetID()] + weight;
 
-					if (minDistance > distances[neighbourNode->GetID()]) {
-						minDistance = distances[neighbourNode->GetID()];
-						minNodeIndex = neighbourNode->GetID();
-					}
+				if (totalCost < distances[neighbourNode->GetID()]) {
+					distances[neighbourNode->GetID()] = totalCost;
+
+					queue.push(std::make_pair(neighbourNode, totalCost));
 				}
 			}
 
-			visited[node->GetID()] = true;
-
-			if (minDistance != INT_MAX) {
-				queue.push(graphNodes[minNodeIndex]);
-			}
+			visited[node.first->GetID()] = true;
 		}
 
 		return distances;
@@ -77,12 +72,6 @@ namespace Pathfinding {
 		std::vector<bool> visited(graphNodes.size(), false);
 		std::vector<int> distances(graphNodes.size(), INT_MAX);
 		std::map<Node*, Node*> cameFrom;
-
-		struct NodeCompare {
-			bool operator()(const std::pair<Node*, int>& node1, const std::pair<Node*, int>& node2) {
-				return node1.second > node2.second;
-			}
-		};
 
 		std::priority_queue<std::pair<Node*, int>, std::vector<std::pair<Node*, int>>, NodeCompare> queue;
 
